@@ -17,23 +17,29 @@ export var outDiv_1 = {
 export var imgDiv_s = {
     width:'100%',height:'100vh',overflowX:'hidden',
     background:`url(${require('./imges/library_cover.jpg')}), linear-gradient(rgba(100,100,100,0.8),rgba(130,130,130,0.8))`, backgroundRepeat:'no-repeat', backgroundPosition:'center',backgroundSize:'cover', backgroundBlendMode:'saturation',
-    display:'flex',alignContent:'center',justifyContent:'center',flexWrap:'wrap', flexDirection:'column', 
+    display:'flex',alignContent:'center',justifyContent:'center',flexWrap:'wrap', flexDirection:'column', alignItems:'center',
 
 }
-export var h1_1 = {
+export var h1_1 = (state=999)=> {
+    let width_ = state>768 ? '60%' : '90%'
+    return{
     color:'#fff', textAlign:'center',
     margin:'0px 0px 20px 0px',
-    width:'50%',
+    width:width_,}
 }
-export var inDiv_1 = {
+export var inDiv_1 = (state=999)=> {
+    let width_ = state>1200 ? '60%' : (state > 768) && (state < 1200) ? '80%': '100%'
+    return{
     display:'flex',flexDirection:'row', alignItems:'center',justifyContent:'center',flexWrap:'wrap',
-    width:'50%',
-    position:'relative',
+    width:width_,
+    position:'relative',}
 }
-export var input_1 = {
-    padding:'6px 16px 8px 16px', width:'80%',
+export var input_1 =(state=999)=> {
+    let width_ = state > 1200 ? '80%' : (state > 768 && state < 1200) ? '70%' : '70%'
+    return{
+    padding:'6px 16px 8px 16px', width:width_,
     outline:'none',border:'none', background:'rgba(200,200,200,0.8)', borderTopLeftRadius:'20px',borderBottomLeftRadius:'20px',
-    fontSize:'38px', fontWeight:'500',
+    fontSize:'38px', fontWeight:'500',}
 }
 export var btn_1 = {
     position:'relative',
