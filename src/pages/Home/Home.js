@@ -87,3 +87,4 @@ export const Card = ({ title, imgSrc, tnB }) => {
         </div>
     )
 }
+// 
