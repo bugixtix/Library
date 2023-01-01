@@ -5,21 +5,23 @@ import axios from 'axios'
 
 export const Home = () => {
     let [bookData_$, setBookData_$] = useState([])
+    let [newState_$, newSet_$] = useState(false)
     return (
         <div style={ outDiv_s }>
-            <Main bookData_$={ bookData_$ } setBookData_$={ (something) => { setBookData_$(something) } } />
-            <Content book={ bookData_$ } />
+            <Main bookData_$={ bookData_$ } setBookData_$={ (something) => { setBookData_$(something) } } newSet={(something)=>newSet_$(something)}/>
+            <Content book={ bookData_$ } new_state={newState_$} />
         </div>
     )
 }
 
+//             axios.get('https://www.googleapis.com/books/v1/volumes?q=' + search_$ + '&key=AIzaSyAa1UkRjv3GeFkBH1khGbSB1wNy1moLd7E')
 export const Main = (prop) => {
     let window_width = window.innerWidth
     let [width_$, setWidth_$] = useState(window_width)
     let [search_$, setSearch_$] = useState('')
     let serachBook = (evt) => {
         if (evt.key === "Enter") {
-            axios.get('https://www.googleapis.com/books/v1/volumes?q=' + search_$ + '&key=AIzaSyAa1UkRjv3GeFkBH1khGbSB1wNy1moLd7E').then(res => prop.setBookData_$(res.data.items)).catch(error => console.log(error))
+            axios.get('http://openlibrary.org/search.json?title='+search_$).then((res) => {prop.setBookData_$(res.data); console.log(res.data.docs[0])}).then(()=>{prop.newSet(true)}).catch(error => console.log(error));
         }
     }
 
@@ -43,38 +45,51 @@ export const Main = (prop) => {
         </div>
     )
 }
+function checkUrl(url) {
+    var request = false;
+    if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest;
+    }
+    if (request) {
+            request.open("GET", url);
+            if (request.status == 200) { return true; }
+    }
 
-export const Content = ({ book }) => {
-    console.log(book)
+    return false;
+}
+
+export const Content = ({ book, new_state }) => {
+
+    let options_ = []
+    let [state_$, setState_$] = useState(options_)
+    let [ready_$, setReady_$] = useState(false)
+
+
+    useEffect(()=>{
+        if (new_state)
+        {for (let i = 0; i< 2 ; i++) {
+            options_.push(<Card 
+                key={i} 
+                title={book.docs[i].title} 
+                imgSrc={'https://covers.openlibrary.org/b/isbn/'+book.docs[i].isbn[1]+'-L.jpg'}/>)}
+            setReady_$(true)
+            setState_$(options_)
+        }
+    },[new_state,book])
+    useEffect(()=>{new_state&&console.log(checkUrl('https://covers.openlibrary.org/b/isbn/'+book.docs[0].isbn[16]+'-L.jpg')); new_state&&console.log(book.docs[0].length)},[book])
+    // console.log(book.docs[0].title)
     return (
         <div style={ outDiv_2 }>
-
-            {/* { book.length != 0 && book.map((item, index) => {
-            let title_ = item.volumeInfo.title
-            let thumbnail_Bo = item.volumeInfo.imageLinks
-            let thumbnail_ = item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.smallThumbnail
-            return <Card key={ index } title={ title_} imgSrc={thumbnail_} tnB={thumbnail_Bo}/>
-        }) } */}
-            <Card title={ 'something' } />
+            {state_$}
+            <Card title={ 'something' } imgSrc={'https://covers.openlibrary.org/b/oclc/'+'-L.jpg'} />
         </div>
     )
 }
 
 export const Card = ({ title, imgSrc, tnB }) => {
-    let [state_$, setState_$] = useState('')
-    async function tryIt (){
-        const response = await axios('http://books.google.com/books/content?id=njFuEAAAQBAJ&printsec=frontcover&img=1&zoom=5',{headers:{'Access-Control-Allow-Origin':'http://localhost:3000'}})
-        if(!response.ok){throw new Error('errror'+response.status)}
-        const result = await response.json()
-        setState_$(result)
-    }
-    tryIt()
-    // let data_ = fetch('http://books.google.com/books/content?id=njFuEAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api').then(res => res.json()).then(data => data).catch(error=>console.log('erorr'+error))
-    // useEffect(() => {
-    // }, [])
     return (
         <div style={ outDiv_3 }>
-            <img style={ img_s } src={state_$} alt="book cover"></img>
+            <img style={ img_s } src={imgSrc} alt="book cover"></img>
             <div style={ inDiv_3 }>
                 <h3 style={ h3_3 }>
                     { title || 'something' }
