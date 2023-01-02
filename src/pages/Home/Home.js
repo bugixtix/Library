@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { outDiv_s, imgDiv_s, outDiv_1, h1_1, inDiv_1, btn_1, input_1, outDiv_2, outDiv_3, inDiv_3, h3_3, p_3, img_s } from "../../styles_";
 import { HiOutlineSearch } from "react-icons/hi"
 import axios from 'axios'
-
+// 
 export const Home = () => {
     let [bookData_$, setBookData_$] = useState([])
     let [newState_$, newSet_$] = useState(false)
