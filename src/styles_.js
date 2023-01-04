@@ -56,7 +56,7 @@ export var btn_1 = {
 // --------------------------------------------
 
 export var outDiv_2 = {
-    display:'flex',flexDirection:'row',justifyContent:'center', flexWrap:'wrap',
+    display:'flex',flexDirection:'row',justifyContent:'center', flexWrap:'wrap', alignItems:'flex-start',
     width:'100%', padding:'2rem'
 }
 
@@ -80,9 +80,11 @@ export var inDiv_3 = {
     padding:'8px 0px 0px 0px',width:'100%',
 }
 export var h3_3 = {
-    fontSize:'28px',
+    fontSize:'22px',
     textAlign:'center',
     padding:'4px',
+    height:'92px',
+    overflowY:'hidden'
 }
 export var p_3 = {
     textAlign:'center',

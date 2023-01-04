@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { outDiv_s, imgDiv_s, outDiv_1, h1_1, inDiv_1, btn_1, input_1, outDiv_2, outDiv_3, inDiv_3, h3_3, p_3, img_s } from "../../styles_";
 import { HiOutlineSearch } from "react-icons/hi"
 import axios from 'axios'
-// 
+// books project is holding up due to the bad APIs that you find on internet nowadays 
 //
 export const Home = () => {
     let [bookData_$, setBookData_$] = useState([])
@@ -47,17 +47,11 @@ export const Main = (prop) => {
     )
 }
 function checkUrl(url) {
-    var request = false;
-    if (window.XMLHttpRequest) {
-            request = new XMLHttpRequest;
-    }
-    if (request) {
-            request.open("GET", url);
-            if (request.status == 200) { return true; }
-    }
-
-    return false;
-}
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+ }
 
 export const Content = ({ book, new_state }) => {
 
@@ -65,24 +59,64 @@ export const Content = ({ book, new_state }) => {
     let [state_$, setState_$] = useState(options_)
     let [ready_$, setReady_$] = useState(false)
 
+    function pickingImgSrc (item){
 
+            // let isbn_0=item.isbn[0]||false 
+            // let isbn_1=item.isbn[1]||false 
+            // let isbn_2=item.isbn[2]||false 
+            // let isbn_3=item.isbn[3]||false 
+            // let isbn_4=item.isbn[4]||false
+            // let isbn_5=item.isbn[5]||false
+            // let olid_=item.olid[0]||false
+            // let iccn_=item.iccn[0]||false
+            // let oclc_=item.oclc[0]||false
+            // let goodreads_=item.id_goodreads[0]||false
+            // let default_src ='https://covers.openlibrary.org/b/isbn/9781419140358-L.jpg'
+            // return (item.isbn[0] && checkUrl('https://covers.openlibrary.org/b/isbn/'+item.isbn[0]+'-L.jpg')) ? 
+            // `https://covers.openlibrary.org/b/isbn/${item.isbn[0]}-L.jpg` : 
+            // (item.isbn[1] &&checkUrl(`https://covers.openlibrary.org/b/isbn/${item.isbn[1]}-L.jpg`)) ? 
+            // `https://covers.openlibrary.org/b/isbn/${item.isbn[1]}-L.jpg` : 
+            // (item.isbn[2] &&checkUrl(`https://covers.openlibrary.org/b/isbn/${item.isbn[2]}-L.jpg`)) ? 
+            // `https://covers.openlibrary.org/b/isbn/${item.isbn[2]}-L.jpg` : 
+            // (item.isbn[3] &&checkUrl(`https://covers.openlibrary.org/b/isbn/${item.isbn[3]}-L.jpg`)) ?
+            // `https://covers.openlibrary.org/b/isbn/${item.isbn[3]}-L.jpg` :
+            // (item.isbn[4] &&checkUrl(`https://covers.openlibrary.org/b/isbn/${item.isbn[4]}-L.jpg`)) ? 
+            // `https://covers.openlibrary.org/b/isbn/${item.isbn[4]}-L.jpg` : 
+            // (item.isbn[5] &&checkUrl(`https://covers.openlibrary.org/b/isbn/${item.isbn[5]}-L.jpg`)) ?
+            // `https://covers.openlibrary.org/b/isbn/${item.isbn[5]}-L.jpg` :
+            // (item.olid&&checkUrl(`https://covers.openlibrary.org/b/olid/${item.olid}-L.jpg`)) ?
+            // `https://covers.openlibrary.org/b/olid/${item.olid}-L.jpg` :
+            // (item.iccn&&checkUrl(`https://covers.openlibrary.org/b/iccn/${item.iccn}-L.jpg`)) ?
+            // `https://covers.openlibrary.org/b/iccn/${item.iccn}-L.jpg` : 
+            // (item.oclc&&checkUrl(`https://covers.openlibrary.org/b/oclc/${item.oclc}-L.jpg`)) ?
+            // `https://covers.openlibrary.org/b/oclc/${item.oclc}-L.jpg` :
+            // checkUrl(`https://covers.openlibrary.org/b/goodreads/${item.id_goodreads}-L.jpg`) ?
+            // `https://covers.openlibrary.org/b/goodreads/${item.id_goodreads}-L.jpg` :
+            // default_src
+            return item.isbn[0]&&checkUrl('https://covers.openlibrary.org/b/isbn/'+item.isbn[0]+'-L.jpg') ? `https://covers.openlibrary.org/b/isbn/${item.isbn[0]}-L.jpg` : item.isbn[1]&&checkUrl('https://covers.openlibrary.org/b/isbn/'+item.isbn[1]+'-L.jpg') ? 'https://covers.openlibrary.org/b/isbn/'+item.isbn[1]+'-L.jpg'  
+            : 'https://covers.openlibrary.org/b/isbn/9781419140358-L.jpg'
+        }
     useEffect(()=>{
         if (new_state)
-        {for (let i = 0; i< 2 ; i++) {
+        {   
+            let num_ = book.docs < 6 ? book.docs.length : 6
+            for (let i = 0; i< num_ ; i++) {
             options_.push(<Card 
                 key={i} 
                 title={book.docs[i].title} 
-                imgSrc={'https://covers.openlibrary.org/b/isbn/'+book.docs[i].isbn[1]+'-L.jpg'}/>)}
+                // imgSrc={'https://covers.openlibrary.org/b/isbn/'+book.docs[i].isbn[0]+'-L.jpg'}
+                imgSrc={pickingImgSrc(book.docs[i])}
+                />)}
             setReady_$(true)
             setState_$(options_)
         }
     },[new_state,book])
-    useEffect(()=>{new_state&&console.log(checkUrl('https://covers.openlibrary.org/b/isbn/'+book.docs[0].isbn[16]+'-L.jpg')); new_state&&console.log(book.docs[0].length)},[book])
+    useEffect(()=>{new_state&&console.log(checkUrl('https://covers.openlibrary.org/b/isbn/'+book.docs[1].isbn[0]+'-L.jpg'))},[book,new_state])
     // console.log(book.docs[0].title)
     return (
         <div style={ outDiv_2 }>
             {state_$}
-            <Card title={ 'something' } imgSrc={'https://covers.openlibrary.org/b/oclc/'+'-L.jpg'} />
+            {/* <Card title={ 'something' } imgSrc={'https://covers.openlibrary.org/b/oclc/'+'-L.jpg'} /> */}
         </div>
     )
 }
